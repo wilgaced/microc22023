@@ -50,6 +50,7 @@ typedef struct
 
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
+DMA_HandleTypeDef hdma_adc1;
 
 TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;
@@ -71,6 +72,7 @@ uint32_t adcValue = 0;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
+static void MX_DMA_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_TIM1_Init(void);
 static void MX_TIM2_Init(void);
@@ -151,6 +153,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_USART2_UART_Init();
   MX_TIM1_Init();
   MX_TIM2_Init();
@@ -162,7 +165,8 @@ int main(void)
   HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
   keypad.time = 4;
   pwmupdate.time = 10;
-  HAL_ADC_Start_IT(&hadc1);
+  HAL_ADC_Start_DMA (&hadc1, &adcValue, 1);
+//  HAL_ADC_Start_IT(&hadc1);
   //adcupdate.time = 5;
   /* USER CODE END 2 */
 
@@ -277,7 +281,7 @@ static void MX_ADC1_Init(void)
   hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
   hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
   hadc1.Init.NbrOfConversion = 1;
-  hadc1.Init.DMAContinuousRequests = DISABLE;
+  hadc1.Init.DMAContinuousRequests = ENABLE;
   hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
   hadc1.Init.LowPowerAutoWait = DISABLE;
   hadc1.Init.Overrun = ADC_OVR_DATA_OVERWRITTEN;
@@ -442,6 +446,22 @@ static void MX_USART2_UART_Init(void)
   /* USER CODE BEGIN USART2_Init 2 */
 
   /* USER CODE END USART2_Init 2 */
+
+}
+
+/**
+  * Enable DMA controller clock
+  */
+static void MX_DMA_Init(void)
+{
+
+  /* DMA controller clock enable */
+  __HAL_RCC_DMA1_CLK_ENABLE();
+
+  /* DMA interrupt init */
+  /* DMA1_Channel1_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
 
 }
 
