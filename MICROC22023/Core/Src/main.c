@@ -116,10 +116,96 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   }
 }
 
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) //Call Back para ADC con Interupt
 {
-	adcValue = HAL_ADC_GetValue(&hadc1);
+	adcValue = HAL_ADC_GetValue(&hadc1);			   //copia en adcValue los valores convertidos en ADC
 	HAL_ADC_Start_IT(&hadc1);
+}
+
+void led_matrix_on_y(uint8_t posicion)
+{
+
+}
+
+void led_matrix_on_x(uint8_t posicion)
+{
+
+}
+
+void led_matrix_display(uint16_t time, uint16_t timediv,uint32_t voltaje,  uint32_t voltdiv)
+{
+	if(time == timediv *= 1)
+	{
+		led_matrix_on_y(0);
+	}
+	if(time == timediv *= 2)
+	{
+		led_matrix_on_y(0);
+	}
+	if(time == timediv *= 3)
+	{
+		led_matrix_on_y(0);
+	}
+	if(time == timediv *= 4)
+	{
+		led_matrix_on_y(0);
+	}
+	if(time == timediv *= 5)
+	{
+		led_matrix_on_y(0);
+	}
+	if(time == timediv *= 6)
+	{
+		led_matrix_on_y(0);
+	}
+	if(time == timediv *= 7)
+	{
+		led_matrix_on_y(0);
+	}
+	if(time == timediv *= 8)
+	{
+		led_matrix_on_y(0);
+	}
+
+	if (voltaje > voltdiv - (voltdiv * 0.1) || voltaje < voltdiv + (voltdiv * 0.1))
+	{
+		led_matrix_0n_x(0);
+	}
+	voltdiv *= 2;
+	if (voltaje > voltdiv - (voltdiv * 0.1) || voltaje < voltdiv + (voltdiv * 0.1))
+		{
+			led_matrix_0n_x(0);
+		}
+	voltdiv *= 3;
+	if (voltaje > voltdiv - (voltdiv * 0.1) || voltaje < voltdiv + (voltdiv * 0.1))
+		{
+			led_matrix_0n_x(0);
+		}
+	voltdiv *= 4;
+	if (voltaje > voltdiv - (voltdiv * 0.1) || voltaje < voltdiv + (voltdiv * 0.1))
+		{
+			led_matrix_0n_x(0);
+		}
+	voltdiv *= 5;
+	if (voltaje > voltdiv - (voltdiv * 0.1) || voltaje < voltdiv + (voltdiv * 0.1))
+		{
+			led_matrix_0n_x(0);
+		}
+	voltdiv *= 6;
+	if (voltaje > voltdiv - (voltdiv * 0.1) || voltaje < voltdiv + (voltdiv * 0.1))
+		{
+			led_matrix_0n_x(0);
+		}
+	voltdiv *= 7;
+	if (voltaje > voltdiv - (voltdiv * 0.1) || voltaje < voltdiv + (voltdiv * 0.1))
+		{
+			led_matrix_0n_x(0);
+		}
+	voltdiv *= 8;
+	if (voltaje > voltdiv - (voltdiv * 0.1) || voltaje < voltdiv + (voltdiv * 0.1))
+		{
+			led_matrix_0n_x(0);
+		}
 }
 
 
@@ -165,8 +251,8 @@ int main(void)
   HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
   keypad.time = 4;
   pwmupdate.time = 10;
-  HAL_ADC_Start_DMA (&hadc1, &adcValue, 1);
-//  HAL_ADC_Start_IT(&hadc1);
+  HAL_ADC_Start_DMA (&hadc1, &adcValue, 1); //ADC con Direct Memory Acces
+//  HAL_ADC_Start_IT(&hadc1);  	 			//ADC con interrupcion
   //adcupdate.time = 5;
   /* USER CODE END 2 */
 
@@ -187,7 +273,7 @@ int main(void)
 			pwmupdate.flagtimeout = false;
 		}
 
-//		if(adcupdate.flagtimeout == true)
+//		if(adcupdate.flagtimeout == true)			//ADC polling
 //		{
 //			HAL_ADC_Start(&hadc1);
 //			HAL_ADC_PollForConversion(&hadc1, 2000);
